@@ -1,0 +1,22 @@
+<div class="container">
+    <div class="card shadow mb-4">
+    <div class="card-body">
+    <table class="table table-striped">
+    <thead>
+        <tr> <th >Id</th><th>Nom</th> <th>age</th> <th>type</th><th>categorie</th> </tr>
+    </thead>
+    <tbody *ngFor="let a of animals">
+    <tr >
+    <td>{{a.id}}</td>
+    <td>{{a.nom}}</td>
+    <td>{{a.age}}</td>
+    <td>{{a.type}}</td>
+    <td>{{a.animalCategory.nomCat}}</td>
+    <td><a  *ngIf="authService.isAdmin()" class="btn btn-danger" (click)="supprimeranimal(a)">Supprimer</a></td>
+    <td><a *ngIf="authService.isAdmin()"  class="btn btn-success" [routerLink]="['/updateanimal',a.id]">Modifier</a></td>   
+    </tr>
+    </tbody>
+    </table>
+    </div>
+    </div>
+    </div>
