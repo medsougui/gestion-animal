@@ -22,31 +22,31 @@ public class AnimalRESTController {
     private AnimalService animalService;
     
     // GET all animals
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(path= "all",method = RequestMethod.GET)
     public List<AnimalDTO > getAllAnimals() {
         return animalService.getAllAnimals();
     }
     
     // GET animal by ID
-    @RequestMapping(value="/{id}", method = RequestMethod.GET)
+    @RequestMapping(value="/getbyid/{id}", method = RequestMethod.GET)
     public AnimalDTO  getAnimalById(@PathVariable("id") Long id) {
         return animalService.getAnimal(id);
     }
     
     // POST create a new animal
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value="/addani",method = RequestMethod.POST)
     public AnimalDTO  createAnimal(@RequestBody AnimalDTO animal) {
         return animalService.saveAnimal(animal);
     }
     
     // PUT update an existing animal
-    @RequestMapping(method = RequestMethod.PUT)
+    @RequestMapping(value="/update",method = RequestMethod.PUT)
     public Animal updateAnimal(@RequestBody AnimalDTO animal) {
         return animalService.updateAnimal(animal);
     }
     
     // DELETE an animal by ID
-    @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value="/delani/{id}", method = RequestMethod.DELETE)
     public void deleteAnimal(@PathVariable("id") Long id) {
         animalService.deleteAnimalById(id);
     }

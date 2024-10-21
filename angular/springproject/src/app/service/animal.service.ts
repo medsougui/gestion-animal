@@ -4,6 +4,7 @@ import {animalCategory} from "../model/animalcategorie.model";
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CategorieWrapper } from '../model/animalcategoriewrapper.moel';
+import { AuthService } from './auth.service';
 const httpOptions = {
   headers: new HttpHeaders( {'Content-Type': 'application/json'} )
 };
@@ -13,11 +14,10 @@ const httpOptions = {
 export class AnimalService {
   apiURL: string = 'http://localhost:8083/animals/api';
   apiURLCat: string ='http://localhost:8083/animals/cat';
-  
   animalCategory!:animalCategory[];
   animal!:Animal;
   animals !: Animal[]; 
-  constructor(private http : HttpClient) { 
+  constructor(private http : HttpClient,private authService: AuthService) { 
     /* this.animalcat=[
       {
         idcat: 1,
@@ -55,35 +55,62 @@ export class AnimalService {
     ];*/
   } 
 listanimals():Observable<Animal[]>{
-return this.http.get<Animal[]>(this.apiURL);
+  /* let jwt = this.authService.getToken();
+  jwt = "Bearer "+jwt;
+  let httpHeaders = new HttpHeaders({"Authorization":jwt})
+  return this.http.get<Animal[]>(this.apiURL+"/all",{headers:httpHeaders});
+   */
+  return this.http.get<Animal[]>(this.apiURL+"/all");
 }
-listanimalcat():Observable<CategorieWrapper>{
-  return this.http.get<CategorieWrapper>(this.apiURLCat);
-}
-ajouteranimal(ani:Animal):Observable<Animal>{
-  return this.http.post<Animal>(this.apiURL, ani, httpOptions);
-}
-supprimeranimal(id:number){
-  const url = `${this.apiURL}/${id}`;
-return this.http.delete(url, httpOptions);
 
+listanimalcat():Observable<CategorieWrapper>{
+        let jwt = this.authService.getToken();
+        jwt = "Bearer "+jwt;
+        let httpHeaders = new HttpHeaders({"Authorization":jwt})
+        return  this.http.get<CategorieWrapper>(this.apiURLCat,{headers:httpHeaders});
+        }
+
+
+ajouteranimal(ani:Animal):Observable<Animal>{
+  let jwt = this.authService.getToken();
+jwt = "Bearer "+jwt;
+let httpHeaders = new HttpHeaders({"Authorization":jwt})
+return this.http.post<Animal>(this.apiURL+"/addani", ani, {headers:httpHeaders});
+}
+
+
+supprimeranimal(id:number){
+
+const url = `${this.apiURL}/delani/${id}`;
+        let jwt = this.authService.getToken();
+        jwt = "Bearer "+jwt;
+        let httpHeaders = new HttpHeaders({"Authorization":jwt}) 
+          return this.http.delete(url,  {headers:httpHeaders});
   /* const index=this.animals.indexOf(ani,0);
   if (index > -1) {
     this.animals.splice(index, 1);
     }
      */
 }
+
+
 consulteranimal(id:Number):Observable<Animal>{
-  const url = `${this.apiURL}/${id}`;
-  return this.http.get<Animal>(url);
+  const url = `${this.apiURL}/getbyid/${id}`;
+          console.log(url);
+          let jwt = this.authService.getToken();
+          jwt = "Bearer "+jwt;
+          let httpHeaders = new HttpHeaders({"Authorization":jwt}) 
+            return this.http.get<Animal>(url,{headers:httpHeaders});
 }
 consultercat(id:number):animalCategory{
   return this.animalCategory.find(cat => cat.idCat == id)!;
 }
 updateanimal(a:Animal):Observable<Animal>{
-  return this.http.put<Animal>(this.apiURL, a, httpOptions);
-  /* this.supprimeranimal(a.id!);
-  this.ajouteranimal(a); */
+  
+          let jwt = this.authService.getToken();
+          jwt = "Bearer "+jwt;
+          let httpHeaders = new HttpHeaders({"Authorization":jwt}) 
+            return this.http.put<Animal>(this.apiURL+"/updateani", a, {headers:httpHeaders});
 }
 
 trieranimals(){
