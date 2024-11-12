@@ -1,32 +1,42 @@
 package com.med.ani.service;
-import com.med.ani.dto.AnimalDTO;
-import java.util.List;
-import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.med.ani.dto.AnimalDTO;
 import com.med.ani.entities.Animal;
 import com.med.ani.entities.AnimalCategory;
+import com.med.ani.repos.ImageRepository;
 import com.med.ani.repos.AnimalRepository;
 
 @Service
 public class AnimalServiceImpl implements AnimalService {
 
     @Autowired
-    private AnimalRepository animalRepository;
+    AnimalRepository animalRepository;
+
+    @Autowired
+    ImageRepository imageRepository;
 
     @Override
-    public AnimalDTO saveAnimal(AnimalDTO animal) {
-        return convertEntityToDto(animalRepository.save(convertDtoToEntity(animal)));
+    public Animal saveAnimal(Animal animal) {
+        return animalRepository.save(animal);
     }
 
     @Override
-    public Animal updateAnimal(AnimalDTO animal) {
-        return animalRepository.save(convertDtoToEntity(animal));
+    public Animal updateAnimal(Animal animal) {
+        // Uncomment if you want to handle old image deletion when updating the animal
+        // Long oldAnimalImageId = this.getAnimal(animal.getId()).getImages().get(0).getIdImage();
+        // Long newAnimalImageId = animal.getImages().get(0).getIdImage();
+        Animal updatedAnimal = animalRepository.save(animal);
+        // if (!oldAnimalImageId.equals(newAnimalImageId)) {
+        //     imageRepository.deleteById(oldAnimalImageId);
+        // }
+        return updatedAnimal;
     }
 
     @Override
@@ -36,19 +46,24 @@ public class AnimalServiceImpl implements AnimalService {
 
     @Override
     public void deleteAnimalById(Long id) {
+        // Delete image files before deleting the animal
+        Animal animal = getAnimal(id);
+        try {
+            Files.delete(Paths.get(System.getProperty("user.home") + "/images/" + animal.getImagePath()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         animalRepository.deleteById(id);
     }
 
     @Override
-    public AnimalDTO  getAnimal(Long id) {
-        return convertEntityToDto(animalRepository.findById(id).orElse(null));
+    public Animal getAnimal(Long id) {
+        return animalRepository.findById(id).orElseThrow(() -> new RuntimeException("Animal not found with ID: " + id));
     }
 
     @Override
-    public List<AnimalDTO > getAllAnimals() {
-        return  animalRepository.findAll().stream()
-        		.map(this::convertEntityToDto)
-        		.collect(Collectors.toList());
+    public List<Animal> getAllAnimals() {
+        return animalRepository.findAll();
     }
 
     @Override
@@ -62,8 +77,8 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public List<Animal> findByNomAndAge(String nom, Integer age) {
-        return animalRepository.findByNomAndAge(nom, age);
+    public List<Animal> findByNomAndAgeGreaterThan(String nom, Integer age) {
+        return animalRepository.findByNomAndAgeGreaterThan(nom, age);
     }
 
     @Override
@@ -72,8 +87,8 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     @Override
-    public List<Animal> findByAnimalCategoryIdCat(Long idCat) {
-        return animalRepository.findByAnimalCategoryIdCat(idCat);
+    public List<Animal> findByAnimalCategoryIdCat(Long id) {
+        return animalRepository.findByAnimalCategoryIdCat(id);
     }
 
     @Override
@@ -85,22 +100,4 @@ public class AnimalServiceImpl implements AnimalService {
     public List<Animal> sortAnimalsByNameAndAge() {
         return animalRepository.sortAnimalsByNameAndAge();
     }
-    @Autowired
-    ModelMapper modelMapper;
-    
-    @Override
-    public AnimalDTO convertEntityToDto(Animal animal) {
-    	modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
-     AnimalDTO animalDTO = modelMapper.map(animal, AnimalDTO.class);
-    		 return animalDTO; 
-    }
-     @Override
-     public Animal convertDtoToEntity(AnimalDTO animalDto) {
-    	 
-    	 Animal animal = new Animal();
-    	 animal=modelMapper.map(animalDto,Animal.class);
-      return animal;
-     }
-    
-    
 }

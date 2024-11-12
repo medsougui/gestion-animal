@@ -23,25 +23,25 @@ public class AnimalRESTController {
     
     // GET all animals
     @RequestMapping(path= "all",method = RequestMethod.GET)
-    public List<AnimalDTO > getAllAnimals() {
+    public List<Animal> getAllAnimals() {
         return animalService.getAllAnimals();
     }
     
     // GET animal by ID
     @RequestMapping(value="/getbyid/{id}", method = RequestMethod.GET)
-    public AnimalDTO  getAnimalById(@PathVariable("id") Long id) {
+    public Animal getAnimalById(@PathVariable("id") Long id) {
         return animalService.getAnimal(id);
     }
     
     // POST create a new animal
     @RequestMapping(value="/addani",method = RequestMethod.POST)
-    public AnimalDTO  createAnimal(@RequestBody AnimalDTO animal) {
+    public Animal  createAnimal(@RequestBody Animal animal) {
         return animalService.saveAnimal(animal);
     }
     
     // PUT update an existing animal
-    @RequestMapping(value="/update",method = RequestMethod.PUT)
-    public Animal updateAnimal(@RequestBody AnimalDTO animal) {
+    @RequestMapping(value="/updateani",method = RequestMethod.PUT)
+    public Animal updateAnimal(@RequestBody Animal animal) {
         return animalService.updateAnimal(animal);
     }
     

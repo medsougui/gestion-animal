@@ -9,6 +9,8 @@ import { ListeCategoriesComponent } from './liste-categories/liste-categories.co
 import { LoginComponent } from './login/login.component';
 import { ForbiddenComponent } from './forbidden/forbidden.component';
 import { AnimalGuard } from './animal.guard';
+import { RegisterComponent } from './register/register.component';
+import { VerifEmailComponent } from './verif-email/verif-email.component';
 const routes: Routes = [
   {path:"animal",component : AnimalComponent},
   {path : "add", component : AddAnimalComponent, canActivate:[AnimalGuard]},
@@ -19,7 +21,8 @@ const routes: Routes = [
   {path: "listeCategories", component : ListeCategoriesComponent},
   {path: 'login', component: LoginComponent},
   {path: 'app-forbidden', component: ForbiddenComponent},
-
+  {path:'register',component:RegisterComponent},
+  { path: 'verifEmail', component: VerifEmailComponent },
 ];
 
 @NgModule({

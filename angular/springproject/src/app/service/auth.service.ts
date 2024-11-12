@@ -11,6 +11,9 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 })
 export class AuthService {
 
+/*  users: User[] = [{"username":"admin","password":"123","roles":['ADMIN']},
+                   {"username":"nadhem","password":"123","roles":['USER']} ]; */
+
  private helper = new JwtHelperService();
 
 apiURL: string = 'http://localhost:8085/users';
@@ -20,9 +23,20 @@ public loggedUser!:string;
 public isloggedIn: Boolean = false;
 public roles!:string[];
 
+public regitredUser : User = new User();
+
   constructor(private router : Router,
               private http : HttpClient
 ) { }
+
+
+
+setRegistredUser(user : User){
+this.regitredUser=user;
+}
+getRegistredUser(){
+return this.regitredUser;
+}
 
   login(user : User)
   {
@@ -32,7 +46,7 @@ public roles!:string[];
  saveToken(jwt:string){
       localStorage.setItem('jwt',jwt);
       this.token = jwt;
-      this.isloggedIn = true; 
+      this.isloggedIn=true; 
       this.decodeJWT();
   }
 
@@ -46,6 +60,7 @@ public roles!:string[];
     const decodedToken = this.helper.decodeToken(this.token);
     this.roles = decodedToken.roles;
     this.loggedUser = decodedToken.sub;
+    
   }
 
  
@@ -100,13 +115,14 @@ public roles!:string[];
   }
 
 
+  registerUser(user :User){
+    return this.http.post<User>(this.apiURL+'/register', user,
+    {observe:'response'});
+    }
 
-  /*getUserRoles(username: string) {
-    this.users.forEach((curUser) => {
-      if (curUser.username == username) {
-        this.roles = curUser.roles;
+
+    validateEmail(code : string){
+      return this.http.get<User>(this.apiURL+'/verifyEmail/'+code);
       }
-    });
-  }*/
     
 }

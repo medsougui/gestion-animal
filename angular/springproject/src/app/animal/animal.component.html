@@ -3,7 +3,7 @@
     <div class="card-body">
     <table class="table table-striped">
     <thead>
-        <tr> <th >Id</th><th>Nom</th> <th>age</th> <th>type</th><th>categorie</th> </tr>
+        <tr> <th >Id</th><th>Nom</th> <th>age</th> <th>type</th><th>categorie</th> <th>Image</th> </tr>
     </thead>
     <tbody *ngFor="let a of animals">
     <tr >
@@ -12,6 +12,10 @@
     <td>{{a.age}}</td>
     <td>{{a.type}}</td>
     <td>{{a.animalCategory.nomCat}}</td>
+    <td><img class="card-img-top img-responsive"
+        src = "{{a.imageStr}}"
+        style = "height :50px;width:100px">
+        </td>
     <td><a  *ngIf="authService.isAdmin()" class="btn btn-danger" (click)="supprimeranimal(a)">Supprimer</a></td>
     <td><a *ngIf="authService.isAdmin()"  class="btn btn-success" [routerLink]="['/updateanimal',a.id]">Modifier</a></td>   
     </tr>

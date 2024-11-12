@@ -69,13 +69,6 @@ class AnimalsApplicationTests {
 		}
 	}
 	
-	@Test
-	public void testfindByNomAge() {
-		List<Animal> animals = animalRepository.findByNomAndAge("Tiger", 5);
-		for (Animal animal : animals) {
-			System.out.println(animal);
-		}
-	}
 	
 	@Test
 	public void testfindByAnimalCategory() {

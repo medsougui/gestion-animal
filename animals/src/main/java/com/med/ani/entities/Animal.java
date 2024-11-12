@@ -1,11 +1,15 @@
 package com.med.ani.entities;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Animal {
@@ -16,7 +20,15 @@ public class Animal {
 	private String nom;
 	private Integer age;
 	private String type;
+	
+	
 
+	 @OneToMany (mappedBy = "animal")
+	 private List<Image> images;
+	
+	 private String imagePath;
+
+	 
 	@ManyToOne
 	@JoinColumn(name = "id_cat")
 	private AnimalCategory animalCategory;
@@ -77,5 +89,20 @@ public class Animal {
 	public String toString() {
 		return "Animal [id=" + id + ", nom=" + nom + ", age=" + age + ", type=" + type + ", animalCategory="
 				+ animalCategory + "]";
+	}
+	public List<Image> getImages() {
+		return images;
+	}
+
+	public void setImages(List<Image> images) {
+		this.images = images;
+	}
+
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
 	}
 }

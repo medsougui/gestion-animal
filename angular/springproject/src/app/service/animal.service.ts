@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CategorieWrapper } from '../model/animalcategoriewrapper.moel';
 import { AuthService } from './auth.service';
+import{Image} from '../model/image.model'
 const httpOptions = {
   headers: new HttpHeaders( {'Content-Type': 'application/json'} )
 };
@@ -75,13 +76,13 @@ ajouteranimal(ani:Animal):Observable<Animal>{
   let jwt = this.authService.getToken();
 jwt = "Bearer "+jwt;
 let httpHeaders = new HttpHeaders({"Authorization":jwt})
-return this.http.post<Animal>(this.apiURL+"/addani", ani, {headers:httpHeaders});
+return this.http.post<Animal>(this.apiURL+"/addanimal", ani, {headers:httpHeaders});
 }
 
 
 supprimeranimal(id:number){
 
-const url = `${this.apiURL}/delani/${id}`;
+const url = `${this.apiURL}/delanimal/${id}`;
         let jwt = this.authService.getToken();
         jwt = "Bearer "+jwt;
         let httpHeaders = new HttpHeaders({"Authorization":jwt}) 
@@ -110,7 +111,7 @@ updateanimal(a:Animal):Observable<Animal>{
           let jwt = this.authService.getToken();
           jwt = "Bearer "+jwt;
           let httpHeaders = new HttpHeaders({"Authorization":jwt}) 
-            return this.http.put<Animal>(this.apiURL+"/updateani", a, {headers:httpHeaders});
+            return this.http.put<Animal>(this.apiURL+"/updateanimal", a, {headers:httpHeaders});
 }
 
 trieranimals(){
@@ -137,6 +138,18 @@ trieranimals(){
       ajouterCategorie( cat: animalCategory):Observable<animalCategory>{
         return this.http.post<animalCategory>(this.apiURLCat, cat, httpOptions);
         }
+
+        uploadImage(file: File, filename: string): Observable<Image>{
+          const imageFormData = new FormData();
+          imageFormData.append('image', file, filename);
+          const url = `${this.apiURL + '/image/upload'}`;
+          return this.http.post<Image>(url, imageFormData);
+          }
+          loadImage(id: number): Observable<Image> {
+          const url = `${this.apiURL + '/image/get/info'}/${id}`;
+          return this.http.get<Image>(url);
+          }
+          
 
 
 }

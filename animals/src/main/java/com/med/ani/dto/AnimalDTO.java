@@ -18,4 +18,5 @@ public class AnimalDTO {
 	private Integer age;
 	private String nomcat;
 	private AnimalCategory animalCategory;
+	
 }

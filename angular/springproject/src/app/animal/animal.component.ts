@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import{Animal} from '../model/animal.model';
 import{AnimalService}from'../service/animal.service';
 import { AuthService } from '../service/auth.service';
+import{Image} from '../model/image.model'
 @Component({
   selector: 'app-animal',
   templateUrl: './animal.component.html',
@@ -23,6 +24,17 @@ export class AnimalComponent implements OnInit{
       console.log(ani);
       this.animals = ani;
       });
+      this.animalService.listanimals().subscribe(ani => {
+        this.animals = ani;
+        this.animals.forEach((ani) => {
+        this.animalService
+        .loadImage(ani.image.idImage)
+        .subscribe((img: Image) => {
+        ani.imageStr = 'data:' + img.type + ';base64,' + img.image;
+        });
+        });
+        });
+        
       }
       
     supprimeranimal(a:Animal){
